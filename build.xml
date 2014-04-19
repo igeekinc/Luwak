@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Luwak" default="buildJar" basedir=".">
+	<description>
+        Build file for Luwak FUSE interface
+	</description>
+	<import file="../iGeekCommon/build-common.xml"/>
+	<!-- set global properties for this build -->
+	<target name="localProperties">
+		<property name="testData" location="testdata"/>
+		<property name="testTemp" location="${output}/testTemp"/>
+		<property name="jarName" value="Luwak.jar"/>
+		<path id="localTestLibs">
+			<pathelement location="/System/Library/Java" />
+			<pathelement location="${javaObjs}"/>
+			<pathelement location="../Indelible/separatetestlibs/activation.jar" />
+			<pathelement location="../Indelible/separatetestlibs/mailapi.jar" />
+			<pathelement location="../Indelible/separatetestlibs/smtp.jar" />
+			<fileset dir="testlibs">
+				<include name="*.jar"/>
+			</fileset>
+		</path>
+	</target>
+	<target name="setupOtherProjects">
+		<addOtherProject otherProjectName="iGeekCommon" classPathRefID="localLibs"/>
+	</target>
+	<target name="runTests" depends="testsCompile" description="Execute tests">
+		<junit>
+			<formatter type="plain"/>
+			<sysproperty key="com.igeekinc.tests.testdata" value="${testData}"/>
+			<sysproperty key="com.igeekinc.tests.testtemp" value="${testTemp}"/>
+			<classpath>
+				<path refid="libs"/>
+				<pathelement location="${javaObjs}"/>
+				<pathelement location="${testObjs}"/>
+			</classpath>
+			<batchtest fork="yes" todir="${testOutputDir}">
+				<fileset dir="${testObjs}"/>
+			</batchtest>
+		</junit>
+	</target>
+	<target name="buildJar" depends="init, otherBuilds, iGeekBuildCommon.buildJar"/>
+</project>
