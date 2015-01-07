@@ -59,6 +59,12 @@ class WorkerRunner implements Runnable
 	}
 }
 
+/**
+ * FUSEDispatch reads messages from the FUSE device and dispatches them on some number of dispatch threads.  The received
+ * messages are passed to a FUSELowLevel which processes them and returns appropriate messages.
+ * @author David L. Smith-Uchida
+ *
+ */
 public abstract class FUSEDispatch 
 {
 	protected Thread reader;

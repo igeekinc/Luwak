@@ -1,17 +1,7 @@
 /*
  * Copyright 2002-2014 iGeek, Inc.
  * All Rights Reserved
- * @Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.@
+ * @@OpenSource@@
  */
  
 package com.igeekinc.luwak;
@@ -21,7 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import com.igeekinc.luwak.examples.LoopbackVolume;
+import com.igeekinc.luwak.examples.loopback.LoopbackVolume;
 import com.igeekinc.luwak.inode.FUSEInodeAdapter;
 import com.igeekinc.luwak.inode.exceptions.InodeException;
 import com.igeekinc.luwak.linux.LinuxFUSEDispatch;
@@ -46,7 +36,7 @@ public class LuwakMain
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException, InodeException
 	{
-		LoopbackVolume loopback = new LoopbackVolume(new File("/Volumes/src1000"));
+		LoopbackVolume loopback = new LoopbackVolume(new File(args[0]));
 		FUSEInodeAdapter adapter = new FUSEInodeAdapter(loopback);
 		LuwakMain main = new LuwakMain(adapter);
 		main.setupChannel();
@@ -64,7 +54,7 @@ public class LuwakMain
         default:
             throw new InternalError("Unrecognized OS");
         }
-		mountOptions.setMountPath("/tmp/aa");
+		mountOptions.setMountPath(args[1]);
 
 		while (true)
 		{

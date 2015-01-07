@@ -24,6 +24,14 @@ import com.igeekinc.luwak.messages.FUSEOpenInMessage;
 import com.igeekinc.luwak.messages.FUSEReadInMessage;
 import com.igeekinc.luwak.messages.FUSEReleaseInMessage;
 
+/**
+ * FUSELowLevel is the interface that receives messages from FUSEDispatch.  If you want to work directly
+ * with messages received from the FUSE device, implement this.  For a more "Java" style interface, use the
+ * FUSEInodeAdapter and implement the necessary interfaces for that: FUSEInode, FUSEFileHandle, FUSEDIRHandle and FUSEHandleManager
+ * 
+ * @author David L. Smith-Uchida
+ *
+ */
 public interface FUSELowLevel 
 {
 	public void setDispatch(FUSEDispatch dispatch);
