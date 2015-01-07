@@ -8,7 +8,7 @@
 	<target name="localProperties">
 		<property name="jarName" value="Luwak.jar"/>
 		<property name="examplesSrcDir" value="examples"/>
-		<property name="examplesObjDir" value="examplesObj"/>
+		<property name="examplesObjDir" value="${output}/examplesObj"/>
 		<mkdir dir="${examplesObjDir}"/>
 	</target>
 	<target name="setProperties" depends="iGeekBuildCommon.setProperties">
