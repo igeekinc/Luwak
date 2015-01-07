@@ -16,7 +16,7 @@ import com.igeekinc.luwak.StatFS;
 import com.igeekinc.luwak.inode.FUSEInodeAdapter;
 import com.igeekinc.luwak.inode.FUSEReqInfo;
 import com.igeekinc.luwak.inode.FUSEVolumeBase;
-import com.igeekinc.luwak.inode.InodeManager;
+import com.igeekinc.luwak.inode.FUSEInodeManager;
 import com.igeekinc.luwak.inode.exceptions.InodeException;
 import com.sun.jna.Native;
 
@@ -122,7 +122,7 @@ public class LoopbackVolume extends FUSEVolumeBase<LoopbackInode, LoopbackFileHa
 		return returnManager;
 	}
 
-	public FUSEInodeAdapter<LoopbackInode, ? extends InodeManager<LoopbackInode>, ?, ?, ?> getAdapter()
+	public FUSEInodeAdapter<LoopbackInode, ? extends FUSEInodeManager<LoopbackInode>, ?, ?, ?> getAdapter()
 	{
 		return adapter;
 	}	

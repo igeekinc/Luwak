@@ -19,18 +19,18 @@ package com.igeekinc.luwak.inode;
 import java.util.HashMap;
 
 /**
- * InodeManager provides a basic inode cache.  Misses in the cache are satisfied by calling into the
+ * FUSEInodeManager provides a basic inode cache.  Misses in the cache are satisfied by calling into the
  * volume
  * @author David L. Smith-Uchida
  *
  * @param <I> Inode class
  */
-public class InodeManager<I extends FUSEInode>
+public class FUSEInodeManager<I extends FUSEInode>
 {
 	protected HashMap<Long, I>map = new HashMap<Long, I>();
 	protected FUSEVolume<I, ?, ?, ?, ?> volume;
 	
-	public InodeManager(FUSEVolume<I, ?, ?, ?, ?> volume)
+	public FUSEInodeManager(FUSEVolume<I, ?, ?, ?, ?> volume)
 	{
 		this.volume = volume;
 	}

@@ -2,9 +2,9 @@ package com.igeekinc.luwak.examples.loopback;
 
 import java.util.HashMap;
 
-import com.igeekinc.luwak.inode.InodeManager;
+import com.igeekinc.luwak.inode.FUSEInodeManager;
 
-class LoopbackInodeManager extends InodeManager<LoopbackInode>
+class LoopbackInodeManager extends FUSEInodeManager<LoopbackInode>
 {
 	HashMap<String, LoopbackInode>pathMap = new HashMap<String, LoopbackInode>();
 	public LoopbackInodeManager(LoopbackVolume parent)

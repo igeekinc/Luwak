@@ -34,7 +34,7 @@ import com.igeekinc.luwak.util.FUSEHandleManager;
  * @param <M> The Inode Manager class
  * @param <H> The Handle Manager Class
  */
-public abstract class FUSEVolumeBase<I extends FUSEInode<? extends FUSEVolume<I, F, D, M, H>>, F extends FUSEFileHandle, D extends FUSEDirHandle, M extends InodeManager<I>, H extends FUSEHandleManager<F, D>> implements FUSEVolume<I, F, D, M, H>
+public abstract class FUSEVolumeBase<I extends FUSEInode<? extends FUSEVolume<I, F, D, M, H>>, F extends FUSEFileHandle, D extends FUSEDirHandle, M extends FUSEInodeManager<I>, H extends FUSEHandleManager<F, D>> implements FUSEVolume<I, F, D, M, H>
 {
 	protected FUSEInodeAdapter<I, M, F, D, H> adapter;
 	protected Logger logger = Logger.getLogger(getClass());
@@ -51,7 +51,7 @@ public abstract class FUSEVolumeBase<I extends FUSEInode<? extends FUSEVolume<I,
 		inodeManager = allocateInodeManager();
 	}
 	@SuppressWarnings("unchecked")
-	public void setInodeAdapter(FUSEInodeAdapter<I, ? extends InodeManager<I>, ?, ?, ?> adapter)
+	public void setInodeAdapter(FUSEInodeAdapter<I, ? extends FUSEInodeManager<I>, ?, ?, ?> adapter)
 	{
 		this.adapter = (FUSEInodeAdapter<I, M, F, D, H>) adapter;
 	}

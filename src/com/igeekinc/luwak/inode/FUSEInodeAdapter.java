@@ -61,7 +61,7 @@ import com.igeekinc.luwak.util.FUSEHandleManager;
  *
  */
 
-public class FUSEInodeAdapter<I extends FUSEInode, M extends InodeManager<I>, F extends FUSEFileHandle, D extends FUSEDirHandle, H extends FUSEHandleManager<F, D>> extends FUSELowLevelBase<F, D, H>
+public class FUSEInodeAdapter<I extends FUSEInode, M extends FUSEInodeManager<I>, F extends FUSEFileHandle, D extends FUSEDirHandle, H extends FUSEHandleManager<F, D>> extends FUSELowLevelBase<F, D, H>
 {
 	FUSEVolume<I, F, D, M, H> volume;
 	

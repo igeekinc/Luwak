@@ -32,20 +32,20 @@ import com.igeekinc.luwak.util.FUSEHandleManager;
  * @param <M> The Inode Manager class
  * @param <H> The Handle Manager Class
  */
-public interface FUSEVolume<I extends FUSEInode, F extends FUSEFileHandle, D extends FUSEDirHandle, M extends InodeManager<I>, H extends FUSEHandleManager<F, D>>
+public interface FUSEVolume<I extends FUSEInode, F extends FUSEFileHandle, D extends FUSEDirHandle, M extends FUSEInodeManager<I>, H extends FUSEHandleManager<F, D>>
 {
 	public H allocateHandleManager();
 	
-	public InodeManager<I> allocateInodeManager();
+	public FUSEInodeManager<I> allocateInodeManager();
 	
-	public FUSEInodeAdapter<I, ? extends InodeManager<I>, ?, ?, ?> getAdapter();
+	public FUSEInodeAdapter<I, ? extends FUSEInodeManager<I>, ?, ?, ?> getAdapter();
 	
 	/**
 	 * This routine will be called when the FUSEInodeAdapter is being initialized
 	 * and gives the adapter to the plugin
 	 * @param adapter
 	 */
-	public void setInodeAdapter(FUSEInodeAdapter<I, ? extends InodeManager<I>, ?, ?, ?> adapter);
+	public void setInodeAdapter(FUSEInodeAdapter<I, ? extends FUSEInodeManager<I>, ?, ?, ?> adapter);
 
 	
 	public I getRoot();
