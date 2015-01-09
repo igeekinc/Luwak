@@ -22,6 +22,7 @@ import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 
 public interface MacOSXLibC extends Library 
 {
@@ -34,4 +35,14 @@ public interface MacOSXLibC extends Library
     public int fstat$INODE64(int fileDescriptor, MacOSXStatStructure64 statStructure);
     public int statfs(String path, StatFSStructure32 statFSStructure);
     public int statfs$INODE64(String path, StatFSStructure64 statFSStructure);
+    public int chmod(String path, int mode);
+    public int chown(String path, int owner, int group);
+    public static class timeval extends Structure
+    {
+    	public static class ByReference extends timeval implements Structure.ByReference{}
+    	
+    	public NativeLong tv_sec;
+    	public NativeLong tv_usec;
+    }
+	public int utimes(String path, timeval.ByReference times);   
 }

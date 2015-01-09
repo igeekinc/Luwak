@@ -103,6 +103,7 @@ public abstract class FUSEDispatch
 	public void pollLoop()
 	{
 		int numErrors = 0;
+		Throwable exitThrowable = null;
 		while(numErrors < 5)
 		{
 			try 
@@ -112,8 +113,10 @@ public abstract class FUSEDispatch
 				numErrors = 0;
 			} catch (IOException e) {
 				numErrors++;
+				exitThrowable = e;
 			}
 		}
+		exitThrowable.printStackTrace();
 	}
 
 	public void workerLoop()
@@ -126,7 +129,6 @@ public abstract class FUSEDispatch
 				dispatchMessage(inMessage);
 			} catch (InterruptedException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

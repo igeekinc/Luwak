@@ -16,12 +16,13 @@
  
 package com.igeekinc.luwak.linux;
 
-import com.igeekinc.luwak.Stat;
 import com.igeekinc.luwak.msghdr;
+import com.igeekinc.luwak.macosx.MacOSXLibC.timeval;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
 
 public interface LinuxLibC extends Library 
 {
@@ -30,4 +31,14 @@ public interface LinuxLibC extends Library
     public int mount(String source, String target, String fsType, NativeLong mountFlags, Pointer data);
     public int __lxstat(int stat_ver, String path, LinuxStat statBuf);
     public int ioctl(int fileDescriptor, int command, Pointer args);
+    public int chmod(String path, int mode);
+    public int chown(String path, int owner, int group);
+    public static class timeval extends Structure
+    {
+    	public static class ByReference extends timeval implements Structure.ByReference{}
+    	
+    	public NativeLong tv_sec;
+    	public NativeLong tv_usec;
+    }
+	public int utimes(String path, timeval.ByReference times); 
 }

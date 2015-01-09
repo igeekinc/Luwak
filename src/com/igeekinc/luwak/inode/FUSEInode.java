@@ -66,7 +66,7 @@ public abstract class FUSEInode<V extends FUSEVolume<?, ?, ?, ?, ?>>
 		return generation;
 	}
 	
-	public FUSEAttr getAttr()
+	public FUSEAttr getAttr() throws InodeException
 	{
 		return attr;
 	}

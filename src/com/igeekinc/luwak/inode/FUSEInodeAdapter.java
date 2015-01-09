@@ -177,11 +177,12 @@ public class FUSEInodeAdapter<I extends FUSEInode, M extends FUSEInodeManager<I>
 				position = ((OSXFUSEGetXAttrInMessage)xattrMessage).getPosition();
 			int bytesRead = inode.getXAttr(messageInfo.getReqInfo(), xattrMessage.getXAttrName(), position, returnBuffer);
 			FUSEOpOutMessage opReply;
+			/*
 			if (xattrMessage.getSize() >= bytesRead)
 			{
 				opReply = new FUSEDataOutMessage(returnBuffer, 0, bytesRead);
 			}
-			else
+			else*/
 			{
 				opReply = new FUSEGetXattrOutMessage(bytesRead);
 			}
@@ -478,7 +479,7 @@ public class FUSEInodeAdapter<I extends FUSEInode, M extends FUSEInodeManager<I>
 	{
 		F writeFileHandle = retrieveFileHandle(writeMessage.getFileHandleNum());
 		long offset = writeMessage.getOffset();
-		ByteBuffer writeBytes = writeMessage.getWriteBytes();
+		ByteBuffer writeBytes = writeMessage.getWriteBytes().slice();
 		int writeFlags = writeMessage.getWriteFlags();
 		writeCommon(message, writeFileHandle, offset, writeBytes, writeFlags);
 	}
@@ -488,7 +489,7 @@ public class FUSEInodeAdapter<I extends FUSEInode, M extends FUSEInodeManager<I>
 		FUSEMessageInfo<I> messageInfo = initReqInfo(message);
 		try
 		{
-			int bytesWritten = writeFileHandle.write(messageInfo.getReqInfo(), offset, writeBytes, writeFlags);
+			int bytesWritten = writeFileHandle.write(messageInfo.getReqInfo(), offset, writeBytes.slice(), writeFlags);
 			FUSEWriteOutMessage opReply = new FUSEWriteOutMessage();
 			opReply.setSize(bytesWritten);
 			replyOK(message, opReply);

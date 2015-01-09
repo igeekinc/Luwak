@@ -1,0 +1,14 @@
+#!/bin/sh
+for i in output/lib/*.jar output/lib/separate/*.jar
+do
+	if [ -z "$CLASSPATH" ]
+	then
+		CLASSPATH=$i
+	else
+		CLASSPATH=$CLASSPATH:$i
+	fi
+done
+echo $CLASSPATH
+export CLASSPATH
+java com.igeekinc.luwak.examples.loopback.LoopbackMain $1 $2
+

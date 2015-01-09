@@ -24,7 +24,7 @@ public class FUSESetAttrInMessage extends FUSEOpInMessage
 	public static final int kPaddingOffset = kValidOffset + 4;
 	public static final int kFileHandleOffset = kPaddingOffset + 4;
 	public static final int kSizeOffset = kFileHandleOffset + 8 ;
-	public static final int kLockOwnerOffset = kFileHandleOffset + 8;
+	public static final int kLockOwnerOffset = kSizeOffset + 8;
 	public static final int kAccessTimeOffset = kLockOwnerOffset + 8;
 	public static final int kModifyTimeOffset = kAccessTimeOffset + 8 ;
 	public static final int kUnused2Offset = kModifyTimeOffset + 8;

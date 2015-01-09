@@ -12,9 +12,10 @@ import com.igeekinc.luwak.util.FUSEDirHandle;
 
 class LoopbackDirHandle extends FUSEDirHandle
 {
-	File file;
-	ArrayList<FUSEDirEntry>dirEntries;
-
+	private File file;
+	private ArrayList<FUSEDirEntry>dirEntries;
+	private long lastUpdated;
+	
 	static Charset utf8 = Charset.forName("UTF-8");
 	LoopbackDirHandle(long handleNum)
 	{
@@ -27,6 +28,11 @@ class LoopbackDirHandle extends FUSEDirHandle
 			throw new IllegalArgumentException(file.toString()+" is not a directory");
 
 		this.file = file;
+		loadEntries();
+	}
+
+	private void loadEntries()
+	{
 		File [] files = file.listFiles();
 		dirEntries = new ArrayList<FUSEDirEntry>(files.length);
 		long offset = 0;
@@ -56,6 +62,7 @@ class LoopbackDirHandle extends FUSEDirHandle
 			curEntry.setOffset(offset);
 			dirEntries.add(curEntry);
 		}
+		lastUpdated = System.currentTimeMillis();
 	}
 
 	public int getIndexForOffset(long offset)
@@ -86,6 +93,8 @@ class LoopbackDirHandle extends FUSEDirHandle
 	{
 		DirectoryEntryBuffer returnBuffer = new DirectoryEntryBuffer(size);
 		int index = getIndexForOffset(offset);
+		if (index == 0 && System.currentTimeMillis() - lastUpdated > 1000)
+			loadEntries();	// Might be stale
 		int startIndex = index;
 		if (index >= 0)
 		{
@@ -99,9 +108,6 @@ class LoopbackDirHandle extends FUSEDirHandle
 				index++;
 			}
 		}
-		System.out.println("readdir, offset = "+offset+", size = "+size);
-		System.out.println("returnBuffer, spaceUsed = "+returnBuffer.getSpaceUsed()+", maxSize = "+returnBuffer.getMaxSize());
-		System.out.println(returnBuffer.toString());
 		return returnBuffer;
 	}
 	

@@ -23,17 +23,20 @@ import com.igeekinc.luwak.macosx.MacOSXStatStructure32;
 import com.igeekinc.luwak.macosx.MacOSXStatStructure64;
 import com.igeekinc.luwak.macosx.StatFSStructure32;
 import com.igeekinc.luwak.macosx.StatFSStructure64;
+import com.igeekinc.util.BitTwiddle;
+import com.igeekinc.util.unix.UnixDate;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 
-enum SystemType
-{
-    kLinux,
-    kMacOSX
-}
 
 public class LibC
 {
+	public enum SystemType
+	{
+	    kLinux,
+	    kMacOSX
+	}
+
     private static SystemType systemType;
     private static boolean is64BitJVM;
     
@@ -118,6 +121,58 @@ public class LibC
             throw new InternalError("Unrecognized OS");    
         }
     }
+    
+    public static int chmod(String path, int mode)
+    {
+        switch(systemType)
+        {
+        case kMacOSX:
+            return MacOSXLibC.INSTANCE.chmod(path, mode);
+        case kLinux:
+            return LinuxLibC.INSTANCE.chmod(path, mode);
+        default:
+            throw new InternalError("Unrecognized OS");    
+        }
+    }
+    
+    public static int chown(String path, int uid, int gid)
+    {
+        switch(systemType)
+        {
+        case kMacOSX:
+            return MacOSXLibC.INSTANCE.chown(path, uid, gid);
+        case kLinux:
+            return LinuxLibC.INSTANCE.chown(path, uid, gid);
+        default:
+            throw new InternalError("Unrecognized OS");    
+        }
+    }
+    
+    public static int utimes(String path, UnixDate accessTime, UnixDate modifyTime)
+    {
+        switch(systemType)
+        {
+        case kMacOSX:
+        	MacOSXLibC.timeval.ByReference macTimesRef = new MacOSXLibC.timeval.ByReference();
+        	MacOSXLibC.timeval [] macTimes = (MacOSXLibC.timeval [])macTimesRef.toArray(2);
+        	macTimes[0].tv_sec = new NativeLong(accessTime.getSecsLong());
+        	macTimes[0].tv_usec = new NativeLong(accessTime.getUSecs());
+        	macTimes[1].tv_sec = new NativeLong(modifyTime.getSecsLong());
+        	macTimes[1].tv_usec = new NativeLong(modifyTime.getUSecs());
+            return MacOSXLibC.INSTANCE.utimes(path, macTimesRef);
+        case kLinux:
+        	LinuxLibC.timeval.ByReference linuxTimesRef = new LinuxLibC.timeval.ByReference();
+        	LinuxLibC.timeval [] linuxTimes = (LinuxLibC.timeval [])linuxTimesRef.toArray(2);
+        	linuxTimes[0].tv_sec = new NativeLong(accessTime.getSecsLong());
+        	linuxTimes[0].tv_usec = new NativeLong(accessTime.getUSecs());
+        	linuxTimes[1].tv_sec = new NativeLong(modifyTime.getSecsLong());
+        	linuxTimes[1].tv_usec = new NativeLong(modifyTime.getUSecs());
+            return LinuxLibC.INSTANCE.utimes(path, linuxTimesRef);
+        default:
+            throw new InternalError("Unrecognized OS");    
+        }
+    }
+    
     public static Stat newStat()
     {
         switch(systemType)

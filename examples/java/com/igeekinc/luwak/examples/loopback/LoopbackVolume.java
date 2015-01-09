@@ -22,15 +22,17 @@ import com.sun.jna.Native;
 
 public class LoopbackVolume extends FUSEVolumeBase<LoopbackInode, LoopbackFileHandle, LoopbackDirHandle, LoopbackInodeManager, LoopbackHandleManager>
 {
-	File loopRootFile;
-	LoopbackInode root;
-	int inodeNum;
-
+	private File loopRootFile;
+	private LoopbackInode root;
+	private int inodeNum;
+	private LoopbackInodeManager inodeManager;
+	
 	public LoopbackVolume(File loopRootFile) throws InodeException
 	{
 		this.loopRootFile = loopRootFile;
 		FUSEAttr attr = attrForFile(loopRootFile, 1);
 		root = new LoopbackInode(this, loopRootFile, 1, 0, attr);
+		inodeManager.addInode(root);
 		inodeNum = 2;
 	}
 
@@ -116,10 +118,8 @@ public class LoopbackVolume extends FUSEVolumeBase<LoopbackInode, LoopbackFileHa
 	@Override
 	public LoopbackInodeManager allocateInodeManager()
 	{
-		LoopbackInodeManager returnManager = new LoopbackInodeManager(this);
-
-		returnManager.addInode(getRoot());
-		return returnManager;
+		inodeManager = new LoopbackInodeManager(this);
+		return inodeManager;
 	}
 
 	public FUSEInodeAdapter<LoopbackInode, ? extends FUSEInodeManager<LoopbackInode>, ?, ?, ?> getAdapter()

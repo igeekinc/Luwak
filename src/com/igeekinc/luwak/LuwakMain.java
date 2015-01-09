@@ -1,9 +1,18 @@
 /*
  * Copyright 2002-2014 iGeek, Inc.
  * All Rights Reserved
- * @@OpenSource@@
+ * @Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.@
  */
- 
 package com.igeekinc.luwak;
 
 import java.io.File;
@@ -11,9 +20,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import com.igeekinc.luwak.examples.loopback.LoopbackVolume;
-import com.igeekinc.luwak.inode.FUSEInodeAdapter;
-import com.igeekinc.luwak.inode.exceptions.InodeException;
 import com.igeekinc.luwak.linux.LinuxFUSEDispatch;
 import com.igeekinc.luwak.linux.LinuxMountOptions;
 import com.igeekinc.luwak.lowlevel.FUSELowLevel;
@@ -24,51 +30,11 @@ import com.igeekinc.luwak.macosx.OSXMountOptions;
 import com.sun.jna.Memory;
 import com.sun.jna.Native;
 
-public class LuwakMain 
+public class LuwakMain
 {
 	FUSELowLevel lowLevelFS;
 	FUSEChannel channel;
 	FUSEDispatch dispatch;
-	/**
-	 * @param args
-	 * @throws InterruptedException 
-	 * @throws IOException 
-	 */
-	public static void main(String[] args) throws IOException, InterruptedException, InodeException
-	{
-		LoopbackVolume loopback = new LoopbackVolume(new File(args[0]));
-		FUSEInodeAdapter adapter = new FUSEInodeAdapter(loopback);
-		LuwakMain main = new LuwakMain(adapter);
-		main.setupChannel();
-		main.startLoop(); // Be ready to answer requests before the mount gets processed
-		
-		FUSEMountOptions mountOptions;
-		switch(LibC.getSystemType())
-        {
-        case kLinux:
-            mountOptions = new LinuxMountOptions();
-            break;
-        case kMacOSX:
-            mountOptions = new OSXMountOptions();
-            break;
-        default:
-            throw new InternalError("Unrecognized OS");
-        }
-		mountOptions.setMountPath(args[1]);
-
-		while (true)
-		{
-			try
-			{
-				Thread.sleep(60000);
-			}
-			catch (InterruptedException e)
-			{
-				
-			}
-		}
-	}
-
 	public LuwakMain(FUSELowLevel lowLevelFS)
 	{
 		this.lowLevelFS = lowLevelFS;
@@ -106,8 +72,6 @@ public class LuwakMain
 	
 	void setupLinuxMount(LinuxMountOptions mountOptions) throws IOException, InterruptedException
 	{
-	    
-	    notifyAll();
 	    String opts = "fd="+channel.getFDNum()+",rootmode=40000,user_id=0,group_id=0";
 	    byte [] optsBytes = opts.getBytes(Charset.forName("UTF-8"));
 	    Memory optsBuf = new Memory(optsBytes.length + 1);
@@ -125,6 +89,7 @@ public class LuwakMain
 		mountOptions.setRandom(channel);
 		if (mountOptions.getFSName() == null)
 			mountOptions.setFSName("/dev/"+channel.getDevName());
+		mountOptions.setVolumeName("Loopback ");
 		OSXFUSENativeMountArgs mountArgs = mountOptions.getNativeMountArgs(true);
 		
 	    /*

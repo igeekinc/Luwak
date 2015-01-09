@@ -19,6 +19,7 @@ import com.igeekinc.luwak.inode.exceptions.NoEntryException;
 import com.igeekinc.luwak.inode.exceptions.NotDirectoryException;
 import com.igeekinc.luwak.inode.exceptions.PermissionException;
 import com.igeekinc.util.linux.LinuxOSConstants;
+import com.igeekinc.util.unix.UnixDate;
 import com.sun.jna.Native;
 
 public class LoopbackInode extends FUSEInode<LoopbackVolume>
@@ -153,15 +154,71 @@ public class LoopbackInode extends FUSEInode<LoopbackVolume>
 		}
 	}
 	
-	public FUSEAttr getAttr(FUSEReqInfo reqInfo) throws InodeException
+	
+	@Override
+	public FUSEAttr getAttr() throws InodeException
 	{
 		return attrForFile(baseFile, getInodeNum());
+	}
+
+	@Override
+	public void setAttr(FUSEAttr attr)
+	{
+		
+	}
+
+	@Override
+	public FUSEAttr getAttr(FUSEReqInfo reqInfo) throws InodeException
+	{
+		return getAttr();
 	}
 
 	
 	public FUSEAttr setAttr(FUSEReqInfo reqInfo, SetAttrs newAttr)
 			throws InodeException
 	{
+		int errno = 0;
+		if (newAttr.isModeValid())
+			errno = LibC.chmod(baseFile.getAbsolutePath(), newAttr.getMode());
+		if (errno != 0)
+			throw InodeException.exceptionForErrorNum(Native.getLastError());
+		if (newAttr.isUIDValid() || newAttr.isGIDValid())
+		{
+			int uid = -1, gid = -1;
+			if (newAttr.isUIDValid())
+				uid = newAttr.getUID();
+			if (newAttr.isGIDValid())
+				gid = newAttr.getGID();
+			errno = LibC.chown(baseFile.getAbsolutePath(), uid, gid);
+			if (errno != 0)
+				throw InodeException.exceptionForErrorNum(Native.getLastError());
+		}
+
+		if (newAttr.isAccessTimeValid() || newAttr.isModifyTimeValid())
+		{
+			UnixDate accessTime, modifyTime;
+			if (newAttr.isAccessTimeValid())
+			{
+				accessTime = newAttr.getAccessTime();
+			}
+			else
+			{
+				FUSEAttr oldAttr = attrForFile(getBaseFile(), getInodeNum());
+				accessTime = oldAttr.getATimeDate();
+			}
+			if (newAttr.isModifyTimeValid())
+			{
+				modifyTime = newAttr.getModifyTime();
+			}
+			else
+			{
+				FUSEAttr oldAttr = attrForFile(getBaseFile(), getInodeNum());
+				modifyTime = oldAttr.getMTimeDate();
+			}
+			errno = LibC.utimes(baseFile.getAbsolutePath(), accessTime, modifyTime);
+			if (errno != 0)
+				throw InodeException.exceptionForErrorNum(Native.getLastError());
+		}
 		return attrForFile(getBaseFile(), getInodeNum());
 	}
 	
