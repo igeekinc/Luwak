@@ -11,9 +11,9 @@ Getting Started
 ---------------
 To build Luwak you will need the Luwak project and the iGeekCommon project.  These can both be checked out from GitHub.
 
-`cd Luwak
+`cd Luwak`
 
-ant`
+`ant`
 
 The output will be in output/lib/Luwak.jar
 

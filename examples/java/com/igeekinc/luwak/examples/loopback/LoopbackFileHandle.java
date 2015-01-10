@@ -1,3 +1,8 @@
+/*
+ * Copyright 2002-2014 iGeek, Inc.
+ * All Rights Reserved
+ * @@OpenSource@@
+ */
 package com.igeekinc.luwak.examples.loopback;
 
 import java.io.IOException;
