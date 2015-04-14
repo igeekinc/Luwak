@@ -18,7 +18,6 @@ import com.igeekinc.luwak.inode.exceptions.InodeException;
 import com.igeekinc.luwak.linux.LinuxMountOptions;
 import com.igeekinc.luwak.lowlevel.FUSELowLevel;
 import com.igeekinc.luwak.macosx.OSXMountOptions;
-import com.igeekinc.util.SystemTest;
 
 public class LoopbackMain extends LuwakMain
 {
