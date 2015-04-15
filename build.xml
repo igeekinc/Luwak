@@ -6,7 +6,11 @@
 	<import file="../iGeekCommon/build-common.xml"/>
 	<!-- set global properties for this build -->
 	<target name="localProperties">
-		<property name="jarName" value="Luwak.jar"/>
+	    <property name="majorRev" value="1"/>
+	    <property name="minorRev" value="0"/>
+	    <property name="pointRev" value="0"/>
+	    <property name="version" value="${majorRev}.${minorRev}.${pointRev}"/>
+		<property name="jarName" value="Luwak-${version}.jar"/>
 		<property name="examplesSrcDir" value="examples"/>
 		<property name="examplesObjDir" value="${output}/examplesObj"/>
 		<mkdir dir="${examplesObjDir}"/>
@@ -17,7 +21,7 @@
 		    <path refid="libs"/>
 		    <pathelement location="${javaObjs}"/>
 		</path>
-		<property name="examplesJar" value="${liboutput}/LuwakExamples.jar"/>
+		<property name="examplesJar" value="${liboutput}/LuwakExamples-${version}.jar"/>
 	</target>
 	<target name="setupOtherProjects">
 		<addOtherProject otherProjectName="iGeekCommon" classPathRefID="localLibs"/>
